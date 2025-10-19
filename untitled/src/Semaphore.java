@@ -1,18 +1,22 @@
 
-class Semaphore
-{
+class Semaphore {
     private int value;
+
     public Semaphore(int value)
     {
         this.value = value;
     }
+
     public Semaphore()
     {
         this(0);
     }
+
     public synchronized void Wait()
     {
-        while (this.value <= 0)
+        this.value--; // 1. Decrement first
+
+        if (this.value < 0)
         {
             try
             {
@@ -22,19 +26,25 @@ class Semaphore
             {
                 System.out.println ("Semaphore::Wait() - caught InterruptedException: " + e.getMessage() );
                 e.printStackTrace();
-            }StackManagerStackManager
+            }
         }
-        this.value--;
     }
+
     public synchronized void Signal()
     {
-        ++this.value;
-        notify();
+        this.value++;
+
+        if (this.value <= 0)
+        {
+            notify();
+        }
     }
+
     public synchronized void P()
     {
         this.Wait();
     }
+
     public synchronized void V()
     {
         this.Signal();

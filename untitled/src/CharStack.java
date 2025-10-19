@@ -15,8 +15,6 @@ class CharStack {
     private static char aCharStack[] = new char[]{�a�, �b�, �c�, �d�, �$�, �$�,�$�,�$�,�$�,�$�
 }
 
-;
-
 // Default constructor
 public CharStack() {
     // Just do nothing
@@ -84,5 +82,4 @@ public int getSize() {
 
 public int getTop() {
     return this.iTop;
-}
 }
