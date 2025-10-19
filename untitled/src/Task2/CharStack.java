@@ -65,6 +65,7 @@ public void push(char pcChar) throws CharStackFullException {
     if (iTop == iSize - 1)
         throw new CharStackFullException();
     aCharStack[++iTop] = pcChar;
+//    System.out.println("DEBUG: push(" + pcChar + ") -> top=" + iTop);
 }
 
 /*
@@ -75,6 +76,7 @@ public char pop() throws CharStackEmptyException {
         throw new CharStackEmptyException();
     char cChar = aCharStack[iTop];
     aCharStack[iTop--] = '$'; // Leave prev. value undefined
+//    System.out.println("DEBUG: pop(" + aCharStack[iTop--] + ") -> top=" + iTop);
     return cChar;
 }
 

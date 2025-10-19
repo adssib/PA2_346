@@ -139,13 +139,13 @@ public class StackManager
                 }
                 catch(CharStackFullException e)
                 {
-                    System.out.println("Producer [TID=" + this.iTID + "]: Stack is full");
                     mutex.V();
+                    System.out.println("Producer [TID=" + this.iTID + "]: Stack is full");
                 }
                 catch(CharStackEmptyException e)
                 {
-                    System.out.println("Producer [TID=" + this.iTID + "]: Stack is empty");
                     mutex.V();
+                    System.out.println("Producer [TID=" + this.iTID + "]: Stack is empty");
                 }
             }
 

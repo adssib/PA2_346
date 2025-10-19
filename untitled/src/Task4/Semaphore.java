@@ -1,4 +1,4 @@
-package Task2;
+package Task4;
 
 class Semaphore {
     private int value;
