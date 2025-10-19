@@ -1,4 +1,4 @@
-package Task2.CharStackExceptions;
+package CharStackExceptions;
 
 public class CharStackFullException extends Exception
 {

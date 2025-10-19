@@ -1,4 +1,4 @@
-package Task4.CharStackExceptions;
+package CharStackExceptions;
 
 public class CharStackEmptyException extends Exception
 {

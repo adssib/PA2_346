@@ -1,9 +1,7 @@
-package Task2;
-
-import Task2.CharStackExceptions.CharStackEmptyException;
-import Task2.CharStackExceptions.CharStackFullException;
-import Task2.CharStackExceptions.CharStackInvalidAceessException;
-import Task2.CharStackExceptions.CharStackInvalidSizeException;
+import CharStackExceptions.CharStackEmptyException;
+import CharStackExceptions.CharStackFullException;
+import CharStackExceptions.CharStackInvalidAceessException;
+import CharStackExceptions.CharStackInvalidSizeException;
 
 class CharStack {
     /*

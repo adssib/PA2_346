@@ -1,42 +1,30 @@
-package Task4;
 
-import Task2.CharStackExceptions.CharStackEmptyException;
-import Task2.CharStackExceptions.CharStackFullException;
-import Task2.CharStackExceptions.CharStackInvalidAceessException;
+import CharStackExceptions.*;
 
-public class StackManager
+public class StackManager_Task4
 {
-    // The Stack
     private static CharStack stack = new CharStack();
-    private static final int NUM_ACQREL = 4; // Number of Producer/Consumer threads
-    private static final int NUM_PROBERS = 1; // Number of threads dumping stack
-    private static int iThreadSteps = 3; // Number of steps they take
+    private static final int NUM_PROBERS = 1;
+    private static int iThreadSteps = 3;
 
-    // Semaphore declaration for Task 2 - Only need mutex for mutual exclusion
+    // Semaphores
     private static Semaphore mutex = new Semaphore(1);
+    private static int producersFinished = 0;
+    private static Semaphore producersMutex = new Semaphore(1);
+    private static Semaphore consumersBlock = new Semaphore(0);
 
-    // ...
-    // The main()
     public static void main(String[] argv)
     {
-        // Some initial stats...
-        try
-        {
+        try {
             System.out.println("Main thread starts executing.");
             System.out.println("Initial value of top = " + stack.getTop() + ".");
             System.out.println("Initial value of stack top = " + stack.pick() + ".");
             System.out.println("Main thread will now fork several threads.");
-        }
-        catch(CharStackEmptyException e)
-        {
-            System.out.println("Caught exception: StackCharEmptyException");
-            System.out.println("Message : " + e.getMessage());
-            System.out.println("Stack Trace : ");
+        } catch (CharStackEmptyException e) {
             e.printStackTrace();
         }
-        /*
-         * The birth of threads
-         */
+
+        // Thread creation
         Consumer ab1 = new Consumer();
         Consumer ab2 = new Consumer();
         System.out.println("Two Consumer threads have been created.");
@@ -45,122 +33,97 @@ public class StackManager
         System.out.println("Two Producer threads have been created.");
         CharStackProber csp = new CharStackProber();
         System.out.println("One CharStackProber thread has been created.");
-        /*
-         * start executing
-         */
+
+        // Start threads
         ab1.start();
-        rb1.start();
         ab2.start();
+        rb1.start();
         rb2.start();
         csp.start();
-        /*
-         * Wait by here for all forked threads to die
-         */
-        try
-        {
+
+        // Join threads
+        try {
             ab1.join();
             ab2.join();
             rb1.join();
             rb2.join();
             csp.join();
-            // Some final stats after all the child threads terminated...
+
             System.out.println("System terminates normally.");
             System.out.println("Final value of top = " + stack.getTop() + ".");
             System.out.println("Final value of stack top = " + stack.pick() + ".");
             System.out.println("Final value of stack top-1 = " + stack.getAt(stack.getTop() - 1) + ".");
-//            System.out.println("Stack access count = " + stack.getAccessCounter());
-        }
-        catch(InterruptedException e)
-        {
-            System.out.println("Caught InterruptedException: " + e.getMessage());
-            System.exit(1);
-        }
-        catch(Exception e)
-        {
-            System.out.println("Caught exception: " + e.getClass().getName());
-            System.out.println("Message : " + e.getMessage());
-            System.out.println("Stack Trace : ");
+        } catch (Exception e) {
             e.printStackTrace();
         }
-    } // main()`
-
+    }
 
     static class Consumer extends BaseThread {
-        private char copy; // A copy of a block returned by pop()
-        // Inside Consumer.run()
-        public void run()
-        {
-            System.out.println ("Consumer thread [TID=" + this.iTID + "] starts executing.");
-            for (int i = 0; i < StackManager.iThreadSteps; i++)  {
+        private char copy;
 
+        public void run() {
+            System.out.println("Consumer thread [TID=" + this.iTID + "] starts executing.");
+
+            try {
+                // Wait until producers finish
+                consumersBlock.P();
+            } catch (Exception e) {}
+
+            for (int i = 0; i < StackManager_Task4.iThreadSteps; i++) {
                 try {
-                    // Acquire lock
                     mutex.P();
-
-                    // Critical section: pop from stack
                     copy = stack.pop();
-
-                    // Release lock
                     mutex.V();
 
-                    // Print outside critical section
-                    System.out.println("Consumer thread [TID=" + this.iTID + "] pops character =" + this.copy);
+                    System.out.println("Consumer thread [TID=" + this.iTID + "] pops character = " + this.copy);
                 } catch (CharStackEmptyException e) {
-                    mutex.V(); // Make sure to release lock even on exception
+                    mutex.V();
                     System.out.println("Consumer [TID=" + this.iTID + "]: Stack is empty");
                 }
             }
-
             System.out.println("Consumer thread [TID=" + this.iTID + "] terminates.");
         }
-    } // class Consumer
+    }
 
-    /*
-     * Inner class Producer
-     */
-    static class Producer extends BaseThread
-    {
+    static class Producer extends BaseThread {
         private char block;
 
-        public void run()
-        {
-            System.out.println ("Producer thread [TID=" + this.iTID + "] starts executing.");
-            for (int i = 0; i < StackManager.iThreadSteps; i++)
-            {
-                try
-                {
+        public void run() {
+            System.out.println("Producer thread [TID=" + this.iTID + "] starts executing.");
+            for (int i = 0; i < StackManager_Task4.iThreadSteps; i++) {
+                try {
                     mutex.P();
                     char top = stack.pick();
                     block = (char)(top + 1);
                     stack.push(block);
                     mutex.V();
 
-                    System.out.println("Producer thread [TID=" + this.iTID + "] pushes character =" + this.block);
-                }
-                catch(CharStackFullException e)
-                {
-                    System.out.println("Producer [TID=" + this.iTID + "]: Stack is full");
+                    System.out.println("Producer thread [TID=" + this.iTID + "] pushes character = " + this.block);
+                } catch (CharStackFullException | CharStackEmptyException e) {
                     mutex.V();
-                }
-                catch(CharStackEmptyException e)
-                {
-                    System.out.println("Producer [TID=" + this.iTID + "]: Stack is empty");
-                    mutex.V();
+                    System.out.println("Producer [TID=" + this.iTID + "]: Stack error");
                 }
             }
+
+            // Once finished all pushes, increment counter
+            producersMutex.P();
+            producersFinished++;
+            if (producersFinished == 2) {
+                // Both producers finished — allow consumers to start
+                consumersBlock.V();
+                consumersBlock.V();
+            }
+            producersMutex.V();
 
             System.out.println("Producer thread [TID=" + this.iTID + "] terminates.");
         }
     }
 
-    /*
-     * Inner class CharStackProber to dump stack contents
-     */
     static class CharStackProber extends BaseThread {
         public void run() {
             System.out.println("CharStackProber thread [TID=" + this.iTID + "] starts executing.");
 
-            for (int i = 0; i < 2 * StackManager.iThreadSteps; i++) {
+            for (int i = 0; i < 2 * StackManager_Task4.iThreadSteps; i++) {
                 // Acquire lock
                 mutex.P();
 
@@ -190,4 +153,5 @@ public class StackManager
             System.out.println("CharStackProber thread [TID=" + this.iTID + "] terminates.");
         }
     } // class CharStackProber
-}// class StackManager
+
+}

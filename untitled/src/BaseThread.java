@@ -1,5 +1,3 @@
-package Task4;
-
 class BaseThread extends Thread
 
 {
