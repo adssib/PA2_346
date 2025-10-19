@@ -1,6 +1,7 @@
+package Task4;
 
 class Semaphore {
-    private int value;
+    int value;
 
     public Semaphore(int value)
     {
@@ -16,7 +17,7 @@ class Semaphore {
     {
         this.value--; // 1. Decrement first
 
-        if (this.value < 0)
+        while (this.value < 0)
         {
             try
             {
@@ -34,10 +35,7 @@ class Semaphore {
     {
         this.value++;
 
-        if (this.value <= 0)
-        {
-            notify();
-        }
+        notify();
     }
 
     public synchronized void P()

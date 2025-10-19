@@ -1,4 +1,4 @@
-package CharStackExceptions;
+package Task4.CharStackExceptions;
 
 public class CharStackInvalidSizeException extends Exception
 {

@@ -1,4 +1,9 @@
-import CharStackExceptions.*;
+package Task4;
+
+import Task4.CharStackExceptions.CharStackEmptyException;
+import Task4.CharStackExceptions.CharStackFullException;
+import Task4.CharStackExceptions.CharStackInvalidAceessException;
+import Task4.CharStackExceptions.CharStackInvalidSizeException;
 
 class CharStack {
     /*
@@ -10,11 +15,10 @@ class CharStack {
     /*
      * Class variables
      */
-    private static int iSize = DEFAULT_SIZE;
-    private static int iTop = 3; // stack[0:9] with four defined values
-    private static char aCharStack[] = new char[]{'a', 'b', 'c', 'd', '$', '$', '$', '$', '$', '$'};
-};
-// Default constructor
+    private int iSize = DEFAULT_SIZE;
+    private int iTop = 3; // stack[0:9] with four defined values
+    private char aCharStack[] = new char[]{'a', 'b', 'c', 'd', '$', '$', '$', '$', '$', '$'};
+
 public CharStack() {
     // Just do nothing
 }
@@ -39,7 +43,7 @@ public CharStack(int piSize) throws CharStackInvalidSizeException {
 /*
  * Picks a value from the top without modifying the stack
  */
-public static char pick() throws CharStackEmptyException {
+public char pick() throws CharStackEmptyException {  // Remove static
     if (iTop == -1)
         throw new CharStackEmptyException();
     return aCharStack[iTop];
@@ -57,7 +61,7 @@ public char getAt(int piPosition) throws CharStackInvalidAceessException {
 /*
  * Standard push operation
  */
-public static void push(char pcChar) throws CharStackFullException {
+public void push(char pcChar) throws CharStackFullException {
     if (iTop == iSize - 1)
         throw new CharStackFullException();
     aCharStack[++iTop] = pcChar;
@@ -66,7 +70,7 @@ public static void push(char pcChar) throws CharStackFullException {
 /*
  * Standard pop operation
  */
-public static char pop() throws CharStackEmptyException {
+public char pop() throws CharStackEmptyException {
     if (iTop == -1)
         throw new CharStackEmptyException();
     char cChar = aCharStack[iTop];
@@ -81,4 +85,5 @@ public int getSize() {
 
 public int getTop() {
     return this.iTop;
+}
 }
