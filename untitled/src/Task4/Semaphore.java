@@ -1,50 +1,39 @@
-package Task4;
+package Task2;
 
 class Semaphore {
-    int value;
+    private int value;
 
-    public Semaphore(int value)
-    {
+    public Semaphore(int value) {
         this.value = value;
     }
 
-    public Semaphore()
-    {
+    public Semaphore() {
         this(0);
     }
 
-    public synchronized void Wait()
-    {
+    public synchronized void Wait() {
         this.value--; // 1. Decrement first
 
-        while (this.value < 0)
-        {
-            try
-            {
+        while (this.value < 0) {
+            try {
                 wait();
-            }
-            catch(InterruptedException e)
-            {
-                System.out.println ("Semaphore::Wait() - caught InterruptedException: " + e.getMessage() );
+            } catch (InterruptedException e) {
+                System.out.println("Semaphore::Wait() - caught InterruptedException: " + e.getMessage());
                 e.printStackTrace();
             }
         }
     }
 
-    public synchronized void Signal()
-    {
-        this.value++;
-
+    public synchronized void Signal() {
+        ++this.value;
         notify();
     }
 
-    public synchronized void P()
-    {
+    public synchronized void P() {
         this.Wait();
     }
 
-    public synchronized void V()
-    {
+    public synchronized void V() {
         this.Signal();
     }
 }

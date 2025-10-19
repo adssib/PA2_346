@@ -106,8 +106,8 @@ public class StackManager
                     // Print outside critical section
                     System.out.println("Consumer thread [TID=" + this.iTID + "] pops character =" + this.copy);
                 } catch (CharStackEmptyException e) {
-                    System.out.println("Consumer [TID=" + this.iTID + "]: Stack is empty");
                     mutex.V(); // Make sure to release lock even on exception
+                    System.out.println("Consumer [TID=" + this.iTID + "]: Stack is empty");
                 }
             }
 
@@ -125,19 +125,15 @@ public class StackManager
         public void run()
         {
             System.out.println ("Producer thread [TID=" + this.iTID + "] starts executing.");
-
             for (int i = 0; i < StackManager.iThreadSteps; i++)
             {
                 try
                 {
-                    mutex.P();  // LOCK
-
-                    // ALL THREE LINES MUST BE HERE - NO MUTEX.V() BETWEEN THEM!
+                    mutex.P();
                     char top = stack.pick();
                     block = (char)(top + 1);
                     stack.push(block);
-
-                    mutex.V();  // UNLOCK
+                    mutex.V();
 
                     System.out.println("Producer thread [TID=" + this.iTID + "] pushes character =" + this.block);
                 }

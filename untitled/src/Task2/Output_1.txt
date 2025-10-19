@@ -1,0 +1,42 @@
+/usr/lib/jvm/java-21-openjdk/bin/java --enable-preview -javaagent:/usr/share/idea/lib/idea_rt.jar=44389 -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -classpath /home/adib/Desktop/SWE/Labs/PA2_346/untitled/out/production/ProgAssignment Task2.StackManager
+Main thread starts executing.
+Initial value of top = 3.
+Initial value of stack top = d.
+Main thread will now fork several threads.
+Two Consumer threads have been created.
+Two Producer threads have been created.
+One CharStackProber thread has been created.
+Producer thread [TID=3] starts executing.
+Consumer thread [TID=1] starts executing.
+Consumer thread [TID=2] starts executing.
+Producer thread [TID=4] starts executing.
+CharStackProber thread [TID=5] starts executing.
+Stack S = ([a],[b],[c],[d],[$],[$],[$],[$],[$],[$])
+Stack S = ([a],[b],[c],[d],[$],[$],[$],[$],[$],[$])
+Stack S = ([a],[b],[c],[d],[$],[$],[$],[$],[$],[$])
+Stack S = ([a],[b],[c],[d],[$],[$],[$],[$],[$],[$])
+Stack S = ([a],[b],[c],[d],[$],[$],[$],[$],[$],[$])
+Stack S = ([a],[b],[c],[d],[$],[$],[$],[$],[$],[$])
+CharStackProber thread [TID=5] terminates.
+Producer thread [TID=4] pushes character =d
+Producer thread [TID=4] pushes character =e
+Producer thread [TID=3] pushes character =e
+Producer thread [TID=3] pushes character =g
+Consumer thread [TID=1] pops character =e
+Consumer thread [TID=2] pops character =d
+Producer thread [TID=4] pushes character =f
+Producer thread [TID=3] pushes character =h
+Consumer thread [TID=1] pops character =h
+Consumer thread [TID=2] pops character =g
+Consumer thread [TID=1] pops character =f
+Producer thread [TID=4] terminates.
+Producer thread [TID=3] terminates.
+Consumer thread [TID=2] pops character =e
+Consumer thread [TID=1] terminates.
+Consumer thread [TID=2] terminates.
+System terminates normally.
+Final value of top = 3.
+Final value of stack top = d.
+Final value of stack top-1 = c.
+
+Process finished with exit code 0

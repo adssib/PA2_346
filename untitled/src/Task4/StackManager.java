@@ -1,8 +1,8 @@
-package Task4;
+package Task2;
 
-import Task4.CharStackExceptions.CharStackEmptyException;
-import Task4.CharStackExceptions.CharStackFullException;
-import Task4.CharStackExceptions.CharStackInvalidAceessException;
+import Task2.CharStackExceptions.CharStackEmptyException;
+import Task2.CharStackExceptions.CharStackFullException;
+import Task2.CharStackExceptions.CharStackInvalidAceessException;
 
 public class StackManager
 {
@@ -106,8 +106,8 @@ public class StackManager
                     // Print outside critical section
                     System.out.println("Consumer thread [TID=" + this.iTID + "] pops character =" + this.copy);
                 } catch (CharStackEmptyException e) {
-                    System.out.println("Consumer [TID=" + this.iTID + "]: Stack is empty");
                     mutex.V(); // Make sure to release lock even on exception
+                    System.out.println("Consumer [TID=" + this.iTID + "]: Stack is empty");
                 }
             }
 
@@ -118,39 +118,40 @@ public class StackManager
     /*
      * Inner class Producer
      */
-    static class Producer extends BaseThread {
-        private char block; // block to be returned
+    static class Producer extends BaseThread
+    {
+        private char block;
 
-        public void run() {
-            System.out.println("Producer thread [TID=" + this.iTID + "] starts executing.");
-
-            for (int i = 0; i < StackManager.iThreadSteps; i++) {
-                try {
-                    // Acquire lock
+        public void run()
+        {
+            System.out.println ("Producer thread [TID=" + this.iTID + "] starts executing.");
+            for (int i = 0; i < StackManager.iThreadSteps; i++)
+            {
+                try
+                {
                     mutex.P();
-
-                    // Critical section: pick top and push next character
                     char top = stack.pick();
-                    block = (char) (top + 1);
+                    block = (char)(top + 1);
                     stack.push(block);
-
-                    // Release lock
                     mutex.V();
 
-                    // Print outside critical section
                     System.out.println("Producer thread [TID=" + this.iTID + "] pushes character =" + this.block);
-                } catch (CharStackFullException e) {
+                }
+                catch(CharStackFullException e)
+                {
                     System.out.println("Producer [TID=" + this.iTID + "]: Stack is full");
-                    mutex.V(); // Make sure to release lock even on exception
-                } catch (CharStackEmptyException e) {
+                    mutex.V();
+                }
+                catch(CharStackEmptyException e)
+                {
                     System.out.println("Producer [TID=" + this.iTID + "]: Stack is empty");
-                    mutex.V(); // Make sure to release lock even on exception
+                    mutex.V();
                 }
             }
 
             System.out.println("Producer thread [TID=" + this.iTID + "] terminates.");
         }
-    } // class Producer
+    }
 
     /*
      * Inner class CharStackProber to dump stack contents
