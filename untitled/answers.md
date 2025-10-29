@@ -1,4 +1,10 @@
-Task 1:
+# Progrmaming Assingment 2:
+
+Made By: 
+- Adib Akkari 40216815
+- Omar Elmasaoudi 40255123
+
+## Task 1:
 
 The supplied Semaphore class did not fully follow the classical semaphore definition. In a classical semaphore, the counter must be initialized to a non-negative value, and when a thread calls Wait() (P operation) on a zero-valued semaphore, it blocks, and the internal counter becomes negative to reflect the number of waiting threads. The original implementation did not correctly track waiting threads and allowed negative initialization.
 
@@ -11,3 +17,4 @@ The Wait() (P) operation decrements the counter and blocks the calling thread if
 The Signal() (V) operation increments the counter and wakes up any waiting threads.
 
 These modifications ensure that mutual exclusion and proper synchronization are maintained when multiple threads access the shared stack.
+
